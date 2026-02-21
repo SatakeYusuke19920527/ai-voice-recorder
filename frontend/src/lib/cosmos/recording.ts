@@ -1,42 +1,12 @@
 import { randomUUID } from 'crypto';
 import { getContainer } from './client';
+import type {
+  RawRecordingDocument,
+  RecordingDocument,
+  RecordingInput,
+} from '@/types/types';
 
 const RECORDING_CONTAINER = process.env.COSMOS_CONTAINER ?? 'recording';
-
-type RecordingInput = {
-  userId: string;
-  userEmail?: string | null;
-  userName?: string | null;
-  transcript: string;
-  audioMimeType?: string | null;
-  audioSize?: number | null;
-  language?: string | null;
-};
-
-export type RecordingDocument = {
-  id: string;
-  userId: string;
-  userEmail: string | null;
-  userName: string | null;
-  transcript: string;
-  language: string;
-  conversationSummary: string;
-  bodyTemperature: string;
-  bloodPressure: string;
-  pulse: string;
-  oxygenSaturation: string;
-  patientCondition: string;
-  audio: {
-    mimeType: string | null;
-    size: number | null;
-  };
-  createdAt: string;
-};
-
-type RawRecordingDocument = Omit<RecordingDocument, 'conversationSummary'> & {
-  conversationSummary?: string;
-  summary?: string;
-};
 
 const normalizeRecording = (doc: RawRecordingDocument): RecordingDocument => ({
   ...doc,

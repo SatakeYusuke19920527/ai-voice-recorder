@@ -9,26 +9,29 @@ import { Button } from '../ui/button';
 const DashboardNav = () => {
   const pathname = usePathname();
   return (
-    <nav className="grid gap-2 items-start">
+    <nav className="grid items-start gap-2">
       {navItems.map((item) => {
+        const isActive = pathname === item.href;
         return (
           <Button
             key={item.href}
-            variant={pathname === item.href ? 'secondary' : 'ghost'}
+            variant="ghost"
             className={cn(
-              'justify-start',
-              pathname === item.href && 'bg-accent',
+              'h-auto min-h-11 justify-start rounded-xl border border-transparent px-3 py-2.5 text-left text-[13px] font-semibold tracking-wide whitespace-normal break-words transition-all',
+              isActive
+                ? 'border-sky-200 bg-gradient-to-r from-sky-100 to-cyan-100 text-sky-800 shadow-sm'
+                : 'text-slate-600 hover:-translate-y-0.5 hover:border-slate-200 hover:bg-white/80 hover:text-slate-900',
             )}
             asChild
           >
-            <Link href={item.href}>
-              {item.icon && <item.icon className="w-4 h-4 mr-2" />}
-              {item.title}
+            <Link href={item.href} className="flex w-full items-start gap-2">
+              {item.icon && <item.icon className="mt-0.5 h-4 w-4 shrink-0" />}
+              <span className="leading-5">{item.title}</span>
             </Link>
           </Button>
         );
       })}
-      <div className="my-4 px-4 md:hidden">
+      <div className="my-4 rounded-xl border border-slate-200/80 bg-white/80 p-3 md:hidden">
         <AuthButton />
       </div>
     </nav>

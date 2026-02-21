@@ -1,6 +1,6 @@
-export const RECORDING_LANGUAGES = ['en-US', 'ja-JP'] as const;
+import type { RecordingLanguage } from '@/types/types';
 
-export type RecordingLanguage = (typeof RECORDING_LANGUAGES)[number];
+export const RECORDING_LANGUAGES = ['en-US', 'ja-JP'] as const;
 
 export const isRecordingLanguage = (
   value: string,

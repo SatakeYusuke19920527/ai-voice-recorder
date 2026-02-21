@@ -1,20 +1,11 @@
-import { getContainer } from './client';
 import {
   DEFAULT_RECORDING_LANGUAGE,
   isRecordingLanguage,
-  type RecordingLanguage,
 } from '../recording-language';
+import { getContainer } from './client';
+import type { RecordingLanguage, UserDocument } from '@/types/types';
 
 const USER_CONTAINER = process.env.COSMOS_USER_CONTAINER ?? 'user';
-
-type UserDocument = {
-  id: string;
-  email?: string | null;
-  recordingLanguage?: RecordingLanguage;
-  createdAt?: string;
-  updatedAt?: string;
-  [key: string]: unknown;
-};
 
 const findUserById = async (id: string): Promise<UserDocument | null> => {
   const container = await getContainer(USER_CONTAINER);
@@ -53,8 +44,7 @@ export const updateUser = async (id: string, email: string) => {
     ...(current ?? {}),
     id,
     email,
-    recordingLanguage:
-      current?.recordingLanguage ?? DEFAULT_RECORDING_LANGUAGE,
+    recordingLanguage: current?.recordingLanguage ?? DEFAULT_RECORDING_LANGUAGE,
     createdAt: current?.createdAt ?? now,
     updatedAt: now,
   };
