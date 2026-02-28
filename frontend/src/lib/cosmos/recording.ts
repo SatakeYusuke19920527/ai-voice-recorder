@@ -11,6 +11,11 @@ const RECORDING_CONTAINER = process.env.COSMOS_CONTAINER ?? 'recording';
 const normalizeRecording = (doc: RawRecordingDocument): RecordingDocument => ({
   ...doc,
   conversationSummary: doc.conversationSummary ?? doc.summary ?? '',
+  nextActions: Array.isArray(doc.nextActions)
+    ? doc.nextActions
+        .map((item) => (typeof item === 'string' ? item.trim() : ''))
+        .filter(Boolean)
+    : [],
 });
 
 export const saveRecording = async (input: RecordingInput) => {
@@ -23,7 +28,8 @@ export const saveRecording = async (input: RecordingInput) => {
     userName: input.userName ?? null,
     transcript: input.transcript,
     language: input.language ?? 'en-US',
-    summary: '',
+    summary: input.summary ?? '',
+    nextActions: input.nextActions ?? [],
     audio: {
       mimeType: input.audioMimeType ?? null,
       size: input.audioSize ?? null,

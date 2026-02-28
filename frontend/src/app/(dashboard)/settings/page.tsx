@@ -10,8 +10,12 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { toast } from 'sonner';
-import type { RecordingLanguage } from '@/types/types';
-import { Check, Globe, Sparkles, Waves } from 'lucide-react';
+import type { EnglishConversationVoice, RecordingLanguage } from '@/types/types';
+import {
+  DEFAULT_ENGLISH_VOICE,
+  ENGLISH_VOICE_OPTIONS,
+} from '@/lib/english-voice';
+import { Check, Globe, Sparkles, Volume2, Waves } from 'lucide-react';
 
 const LANGUAGE_OPTIONS: Array<{ value: RecordingLanguage; label: string }> = [
   { value: 'en-US', label: 'English (US)' },
@@ -20,6 +24,8 @@ const LANGUAGE_OPTIONS: Array<{ value: RecordingLanguage; label: string }> = [
 
 export default function SettingsPage() {
   const [language, setLanguage] = useState<RecordingLanguage>('en-US');
+  const [voice, setVoice] =
+    useState<EnglishConversationVoice>(DEFAULT_ENGLISH_VOICE);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -27,12 +33,19 @@ export default function SettingsPage() {
     const load = async () => {
       try {
         const response = await fetch('/api/settings/recording-language');
-        if (!response.ok) {
+        const voiceResponse = await fetch('/api/settings/english-voice');
+        if (!response.ok || !voiceResponse.ok) {
           throw new Error('failed to fetch setting');
         }
         const data = (await response.json()) as { language?: RecordingLanguage };
+        const voiceData = (await voiceResponse.json()) as {
+          voice?: EnglishConversationVoice;
+        };
         if (data.language === 'en-US' || data.language === 'ja-JP') {
           setLanguage(data.language);
+        }
+        if (voiceData.voice && ENGLISH_VOICE_OPTIONS.includes(voiceData.voice)) {
+          setVoice(voiceData.voice);
         }
       } catch {
         toast.error('設定の読み込みに失敗しました。');
@@ -52,10 +65,15 @@ export default function SettingsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ language }),
       });
-      if (!response.ok) {
+      const voiceResponse = await fetch('/api/settings/english-voice', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ voice }),
+      });
+      if (!response.ok || !voiceResponse.ok) {
         throw new Error('failed to save setting');
       }
-      toast.success('録音言語を保存しました。');
+      toast.success('設定を保存しました。');
     } catch {
       toast.error('設定の保存に失敗しました。');
     } finally {
@@ -131,6 +149,40 @@ export default function SettingsPage() {
             <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-500">
               <Waves className="h-3.5 w-3.5" />
               Current: {language}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-white/80 bg-white/85 shadow-xl shadow-slate-900/10 backdrop-blur">
+          <CardHeader>
+            <CardTitle className="inline-flex items-center gap-2 text-slate-900">
+              <Volume2 className="h-5 w-5 text-emerald-700" />
+              English Conversation Voice
+            </CardTitle>
+            <CardDescription>
+              英会話トレーニングで AI が話す声を選択してください。
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="max-w-sm">
+              <select
+                value={voice}
+                onChange={(event) =>
+                  setVoice(event.target.value as EnglishConversationVoice)
+                }
+                disabled={isLoading || isSaving}
+                className="h-11 w-full rounded-xl border border-slate-300 bg-white px-3 text-sm text-slate-800"
+              >
+                {ENGLISH_VOICE_OPTIONS.map((option) => (
+                  <option key={option} value={option}>
+                    {option}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs text-slate-500">
+              <Waves className="h-3.5 w-3.5" />
+              Current Voice: {voice}
             </div>
           </CardContent>
         </Card>

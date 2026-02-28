@@ -1,5 +1,12 @@
 import type { NavItem } from '@/types/types';
-import { Bot, Database, LayoutDashboard, Mic, Settings } from 'lucide-react';
+import {
+  BookOpen,
+  Database,
+  Languages,
+  LayoutDashboard,
+  Mic,
+  Settings,
+} from 'lucide-react';
 
 export const navItems: NavItem[] = [
   {
@@ -8,9 +15,14 @@ export const navItems: NavItem[] = [
     icon: LayoutDashboard,
   },
   {
-    title: 'New Talk w/ OpenAI',
-    href: '/new-talk-openai',
-    icon: Bot,
+    title: '英会話トレーニング',
+    href: '/english-conversation',
+    icon: Languages,
+  },
+  {
+    title: '単語＆文法',
+    href: '/vocabulary-grammar',
+    icon: BookOpen,
   },
   {
     title: 'Voice Recording (Cosmos)',

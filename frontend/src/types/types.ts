@@ -67,6 +67,20 @@ export type NavItem = {
 // frontend/src/lib/cosmos/user.ts,
 // frontend/src/app/(dashboard)/settings/page.tsx
 export type RecordingLanguage = 'en-US' | 'ja-JP';
+export type EnglishConversationVoice =
+  | 'alloy'
+  | 'ash'
+  | 'ballad'
+  | 'coral'
+  | 'echo'
+  | 'fable'
+  | 'onyx'
+  | 'nova'
+  | 'sage'
+  | 'shimmer'
+  | 'verse'
+  | 'marin'
+  | 'cedar';
 
 // Used by: frontend/src/lib/cosmos/recording.ts (saveRecording input)
 export type RecordingInput = {
@@ -74,6 +88,8 @@ export type RecordingInput = {
   userEmail?: string | null;
   userName?: string | null;
   transcript: string;
+  summary?: string;
+  nextActions?: string[];
   audioMimeType?: string | null;
   audioSize?: number | null;
   language?: string | null;
@@ -90,6 +106,7 @@ export type RecordingDocument = {
   transcript: string;
   language: string;
   conversationSummary: string;
+  nextActions: string[];
   bodyTemperature: string;
   bloodPressure: string;
   pulse: string;
@@ -105,10 +122,11 @@ export type RecordingDocument = {
 // Used by: frontend/src/lib/cosmos/recording.ts (Cosmos raw document mapping)
 export type RawRecordingDocument = Omit<
   RecordingDocument,
-  'conversationSummary'
+  'conversationSummary' | 'nextActions'
 > & {
   conversationSummary?: string;
   summary?: string;
+  nextActions?: string[];
 };
 
 // Used by: frontend/src/lib/cosmos/user.ts
@@ -116,7 +134,30 @@ export type UserDocument = {
   id: string;
   email?: string | null;
   recordingLanguage?: RecordingLanguage;
+  englishConversationVoice?: EnglishConversationVoice;
   createdAt?: string;
   updatedAt?: string;
   [key: string]: unknown;
+};
+
+export type MemorizeWord = {
+  word: string;
+  meaning: string;
+  example: string;
+};
+
+export type MemorizeGrammar = {
+  pattern: string;
+  explanation: string;
+  example: string;
+};
+
+export type MemorizeDocument = {
+  id: string;
+  meetingId: string;
+  sourceBlobName: string;
+  importantWords: MemorizeWord[];
+  grammarPatterns: MemorizeGrammar[];
+  createdAt: string;
+  updatedAt: string;
 };

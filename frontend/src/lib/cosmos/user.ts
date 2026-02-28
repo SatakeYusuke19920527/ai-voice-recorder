@@ -2,8 +2,16 @@ import {
   DEFAULT_RECORDING_LANGUAGE,
   isRecordingLanguage,
 } from '../recording-language';
+import {
+  DEFAULT_ENGLISH_VOICE,
+  isEnglishConversationVoice,
+} from '../english-voice';
 import { getContainer } from './client';
-import type { RecordingLanguage, UserDocument } from '@/types/types';
+import type {
+  EnglishConversationVoice,
+  RecordingLanguage,
+  UserDocument,
+} from '@/types/types';
 
 const USER_CONTAINER = process.env.COSMOS_USER_CONTAINER ?? 'user';
 
@@ -29,6 +37,7 @@ export const createUser = async (id: string, email: string) => {
     id,
     email,
     recordingLanguage: DEFAULT_RECORDING_LANGUAGE,
+    englishConversationVoice: DEFAULT_ENGLISH_VOICE,
     createdAt: now,
     updatedAt: now,
   };
@@ -45,6 +54,11 @@ export const updateUser = async (id: string, email: string) => {
     id,
     email,
     recordingLanguage: current?.recordingLanguage ?? DEFAULT_RECORDING_LANGUAGE,
+    englishConversationVoice:
+      typeof current?.englishConversationVoice === 'string' &&
+      isEnglishConversationVoice(current.englishConversationVoice)
+        ? current.englishConversationVoice
+        : DEFAULT_ENGLISH_VOICE,
     createdAt: current?.createdAt ?? now,
     updatedAt: now,
   };
@@ -81,6 +95,36 @@ export const setUserRecordingLanguage = async (
     ...(current ?? {}),
     id,
     recordingLanguage: language,
+    createdAt: current?.createdAt ?? now,
+    updatedAt: now,
+  };
+  await container.items.upsert(item);
+  return item;
+};
+
+export const getUserEnglishConversationVoice = async (
+  id: string,
+): Promise<EnglishConversationVoice> => {
+  const user = await findUserById(id);
+  if (user && typeof user.englishConversationVoice === 'string') {
+    if (isEnglishConversationVoice(user.englishConversationVoice)) {
+      return user.englishConversationVoice;
+    }
+  }
+  return DEFAULT_ENGLISH_VOICE;
+};
+
+export const setUserEnglishConversationVoice = async (
+  id: string,
+  voice: EnglishConversationVoice,
+) => {
+  const container = await getContainer(USER_CONTAINER);
+  const now = new Date().toISOString();
+  const current = await findUserById(id);
+  const item: UserDocument = {
+    ...(current ?? {}),
+    id,
+    englishConversationVoice: voice,
     createdAt: current?.createdAt ?? now,
     updatedAt: now,
   };

@@ -52,6 +52,26 @@ export default async function RecordingNeonDetailPage({
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="space-y-2">
+            <h2 className="text-sm font-medium">要約</h2>
+            <p className="text-sm text-muted-foreground">
+              {recording.summary || '要約は未作成です。'}
+            </p>
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-sm font-medium">NextAction</h2>
+            {recording.nextActions.length > 0 ? (
+              <ul className="list-disc space-y-1 pl-5 text-sm leading-6 text-muted-foreground">
+                {recording.nextActions.map((action, index) => (
+                  <li key={`${recording.id}-next-action-${index}`}>{action}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                NextAction は未作成です。
+              </p>
+            )}
+          </div>
+          <div className="space-y-2">
             <h2 className="text-sm font-medium">文字起こし</h2>
             <p className="whitespace-pre-wrap text-sm leading-6 text-muted-foreground">
               {recording.transcript}
