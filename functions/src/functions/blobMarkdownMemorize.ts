@@ -34,7 +34,7 @@ const cosmosDatabaseName = process.env.COSMOS_DB_DATABASE_NAME ?? 'db';
 const memorizeContainerName =
   process.env.COSMOS_MEMORIZE_CONTAINER ?? 'memorize';
 const markdownContainerName =
-  process.env.BLOB_MARKDOWN_CONTAINER ?? 'meeting-markdown';
+  process.env.BLOB_MARKDOWN_CONTAINER ?? 'container';
 
 const azureOpenAIEndpoint = process.env.AZURE_OPENAI_ENDPOINT ?? '';
 const azureOpenAIApiKey = process.env.AZURE_OPENAI_API_KEY ?? '';
@@ -159,7 +159,7 @@ const extractMemorizeData = async (
       {
         role: 'system',
         content:
-          'You extract key vocabulary and grammar from a meeting markdown. Return JSON with keys: importantWords (array of {word, meaning, example}) and grammarPatterns (array of {pattern, explanation, example}). Keep outputs concise for memorization.',
+          'You extract key vocabulary and grammar from a meeting markdown. Return JSON with keys: importantWords (array of {word, meaning, example}) and grammarPatterns (array of {pattern, explanation, example}). Write meaning and explanation in Japanese. Keep outputs concise for memorization.',
       },
       {
         role: 'user',

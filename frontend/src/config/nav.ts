@@ -1,7 +1,6 @@
 import type { NavItem } from '@/types/types';
 import {
   BookOpen,
-  Database,
   Languages,
   LayoutDashboard,
   Mic,
@@ -10,7 +9,7 @@ import {
 
 export const navItems: NavItem[] = [
   {
-    title: 'New Talk',
+    title: 'Dashboard',
     href: '/',
     icon: LayoutDashboard,
   },
@@ -29,11 +28,11 @@ export const navItems: NavItem[] = [
     href: '/voice-recording',
     icon: Mic,
   },
-  {
-    title: 'Voice Recording (Neon)',
-    href: '/voice-recording-neon',
-    icon: Database,
-  },
+  // {
+  //   title: 'Voice Recording (Neon)',
+  //   href: '/voice-recording-neon',
+  //   icon: Database,
+  // },
   {
     title: '設定',
     href: '/settings',
